@@ -12,7 +12,7 @@ public class Operator {
 
     //Task 1
     public static void checkNumber() {
-        System.out.println("--------- Task 2 ----------");
+        System.out.println("--------- Task 1 ----------");
         Scanner scanner = new Scanner(System.in);
         System.out.println("Enter number");
         int number = scanner.nextInt();
