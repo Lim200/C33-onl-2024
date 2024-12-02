@@ -129,30 +129,20 @@ public class Array {
     // Task 7
     public static void addOneToArray() {
         System.out.println("\n--------- Task 7 ----------");
-        System.out.println("Enter array size");
-//        Scanner scanner = new Scanner(System.in);
-//        int sizeArray = scanner.nextInt();
-//        int[] array = new int[sizeArray];
-//        Random random = new Random();
-//        for (int i =0; i < array.length; i++) {
-//            array[i] = random.nextInt(0, 9);
-//        }
-        int[] array = new int[]{1,5,6,7,8,9,9,9};
+        int[] array = new int[]{ 0, 1, 9, 9, 9};
         System.out.println(Arrays.toString(array));
-        int arrayLength = array.length - 1;
-        for (int i = arrayLength; i >= 0; i--) {
-            if ( array[i] + 1 <= 9) {
-                array[i] += 1;
-            } else {
-                array[i] = 0;
-                //array[i -1]  += 1;
-                if (i - 1 < 0) {
 
-                    int[] newArray = new int[array.length + 1];
-                    newArray[0] = 1;
-                    System.arraycopy(array, 0, newArray, 1, array.length);
-                    array = newArray;
-                }
+        for (int i = array.length - 1; i >= 0; i--) {
+            array[i]++;
+            if (array[i] <= 9) {
+                break;
+            }
+            array[i] = 0;
+            if (i - 1 < 0) {
+                int[] newArray = new int[array.length + 1];
+                newArray[0] = 1;
+                System.arraycopy(array, 0, newArray, 1, array.length);
+                array = newArray;
             }
         }
         System.out.println(Arrays.toString(array));
