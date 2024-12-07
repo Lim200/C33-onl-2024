@@ -29,6 +29,7 @@ public class GuessWord {
 
         char[] hiddenWord = getHiddenWord().toCharArray();
         char[] openWord = new char[hiddenWord.length];
+        char[] guessedArray = new char[hiddenWord.length];
         Arrays.fill(openWord, 0, openWord.length, '*');
 
         playOrNot();
@@ -42,19 +43,33 @@ public class GuessWord {
             getInputMsg();
 
             // If you have some particular number of attempts
-            // int attempts = 20;
+            int attempts = 0;
 
-            while(true){
+
+
+
+
+            while(attempts <= 20){
                 String input = getInput().nextLine();
+                if (attempts > 15) {
+                    System.out.print("You have " + (19 - attempts) + " attempts left");
+                }
 
                 if (input.length() == 0){
                     // if I have entered nothing - just enter
                     System.out.print("You have entered no value. Please, re-enter: ");
-                    continue;
                 } else if (input.length() == 1){
+                    attempts++;
+                    if (attempts == 20) {
+                        System.out.println("\n\u001B[35m" + " Number of attempts more than 20... GOODBYE" + "\u001B[0m");
+                        break;
+                    }
                     // if I have entered one value
-                    checkLetter();
-                    break;
+                    if (checkLetter(input, hiddenWord, guessedArray)){
+                       return;
+                    };
+                    System.out.print("Please enter the letter or world again: ");
+//
                 } else if (input.length() > 1){
                     // if I have entered more than 1 value = ar, ban...
                     if (checkWord(input, hiddenWord)){
@@ -65,7 +80,6 @@ public class GuessWord {
             }
         } else {
             System.out.println("\u001B[35m" + "You have decided to leave a game... GOODBYE!" + "\u001B[0m");
-            return;
         }
     }
 
@@ -134,9 +148,40 @@ public class GuessWord {
         System.out.print("You see a hidden word on your screen. Please, enter a letter or a whole word: ");
     }
 
-    public static void checkLetter(){
+    public static boolean checkLetter(String input, char[] hiddenWord, char[] guessedArray){
         // Checks a letter in the hidden word
-        System.out.println("You have entered a letter and this method is responsible for the check...");
+        char guessedCountLetter = input.charAt(0);
+        int count = 0;
+
+        for (int el:guessedArray) {
+            if (el == guessedCountLetter){
+                System.out.println("You have already entered this letter.");
+
+                return false;
+            }
+        }
+
+        for (int i =0; i < hiddenWord.length; i++) {
+            if (hiddenWord[i] == guessedCountLetter){
+                count++;
+                guessedArray[i] = guessedCountLetter;
+            }
+        }
+
+
+        if (count > 0) {
+            System.out.println("You guessed it " + count + " letter(s).");
+            if (Arrays.equals(guessedArray, hiddenWord)){
+                System.out.println("You have entered a wrong word.");
+                getWonMessage();
+                return true;
+            }
+        } else {
+            System.out.println("There is no such letter, try again.");
+            return false;
+        }
+        return false;
+
     }
 
     public static boolean checkWord(String input, char[] hiddenWord){
