@@ -29,7 +29,7 @@ public class GuessWord {
 
         char[] hiddenWord = getHiddenWord().toCharArray();
         char[] openWord = new char[hiddenWord.length];
-        char[] guessedArray = new char[hiddenWord.length];
+//        char[] guessedArray = new char[hiddenWord.length];
         Arrays.fill(openWord, 0, openWord.length, '*');
 
         playOrNot();
@@ -65,7 +65,7 @@ public class GuessWord {
                         break;
                     }
                     // if I have entered one value
-                    if (checkLetter(input, hiddenWord, guessedArray)){
+                    if (checkLetter(input, hiddenWord, openWord)){
                        return;
                     };
                     System.out.print("Please enter the letter or world again: ");
@@ -170,7 +170,8 @@ public class GuessWord {
 
 
         if (count > 0) {
-            System.out.println("You guessed it " + count + " letter(s).");
+            printWord(guessedArray);
+            System.out.println("\nYou guessed it " + count + " letter(s).");
             if (Arrays.equals(guessedArray, hiddenWord)){
                 System.out.println("You have entered a wrong word.");
                 getWonMessage();
