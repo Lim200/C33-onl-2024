@@ -19,11 +19,12 @@ import java.util.Scanner;
  */
 public class TicTacToeGame {
     public static void main(String[] args){
-        startGame();
+        int step = 0;
+        startGame(step);
     }
 
     // Starts the game
-    public static void startGame(){
+    public static void startGame(int step){
         getInitialMessage();
 
         if ((getInputValue().nextLine()).equals("y")){
@@ -38,10 +39,32 @@ public class TicTacToeGame {
             // from 0 to 10 player
             if (dice >= 0 && dice <= 10){
                 // Player makes the first move
-                makePlayerMove();
+                while (step <= 9) {
+                    step += 1;
+                    int winPlayer = makePlayerMove(step, gameTable);
+                    if (step == 9 || winPlayer == 5) {
+                        break;
+                    }
+                    step +=1;
+                    int winAi = makeAIMove(step, gameTable);
+                    if (step == 9 || winAi == 5) {
+                        break;
+                    }
+                }
             } else {
                 // from 11 to 20
-                makeAIMove();
+                while (step <= 9) {
+                    step += 1;
+                    int winAi = makeAIMove(step, gameTable);
+                    if (step == 9 || winAi == 5) {
+                        break;
+                    }
+                    step += 1;
+                    int winPlayer = makePlayerMove(step, gameTable);
+                    if (step == 9 || winPlayer == 5) {
+                        break;
+                    }
+                }
             }
         } else {
             System.out.println("\u001B[31m\t" + "You have decided to leave the game. GOODBYE!" + "\u001B[0m");
@@ -95,37 +118,127 @@ public class TicTacToeGame {
         System.out.println("\u001B[0m");
     }
 
+    public static void drawTableNextStep(char[][] gameTable, int cell, int column, char symbol){
+        System.out.println("\u001B[32m");
+        gameTable[cell - 1][column - 1] = symbol;
+        for(int i = 0; i < gameTable.length; i++){
+            for (int j = 0; j <gameTable[i].length; j++){
+                System.out.print("\t" + gameTable[i][j] + "  ");
+            }
+            System.out.println();
+        }
+        System.out.println("\u001B[0m");
+    }
+
+    public static boolean checkWin(char[][] gameTable){
+
+        int[][] winLine = { {0, 1, 2}, {3, 4, 5}, {6, 7, 8}, {0, 4, 8}, {2, 4, 6}, {0, 3, 6}, {1, 4, 7},
+                {2, 5, 8} };
+
+
+        for (int i = 0; i < winLine.length; i++) {
+            int index1 = winLine[i][0];
+            int index2 = winLine[i][1];
+            int index3 = winLine[i][2];
+
+            int row1 = index1 / 3;
+            int col1 = index1 % 3;
+            int row2 = index2 / 3;
+            int col2 = index2 % 3;
+            int row3 = index3 / 3;
+            int col3 = index3 % 3;
+
+            if (gameTable[row1][col1] != '\u0000' &&
+                    gameTable[row1][col1] == gameTable[row2][col2] &&
+                    gameTable[row1][col1] == gameTable[row3][col3]) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+
+
     // Make AI move
-    public static void makeAIMove(){
+    public static int makeAIMove(int step, char[][] gameTable){
         // from 0 to 2 - cells
         // from 0 to 2 - columns
         // coordinates cellAI x columnAI
-        int cellAI = getRandomNumbers().nextInt(0, 3);
-        int columnAI = getRandomNumbers().nextInt(0, 3);
+        char symbolAi;
+        if (step % 2 != 0) {
+            symbolAi = 'X';
+        } else {
+            symbolAi = 'O';
+        }
+        int cellAI, columnAI;
+        while (true) {
+            cellAI = getRandomNumbers().nextInt(1, 4);
+            columnAI = getRandomNumbers().nextInt(1, 4);
 
+            if (gameTable[cellAI - 1][columnAI - 1] != 'X' && gameTable[cellAI - 1][columnAI - 1] != 'O') {
+                break;
+            }
+        }
         System.out.println("AI has decided to make the following move: [" +
-                (cellAI + 1) + "][" + (columnAI + 1) + "].");
+                (cellAI) + "][" + (columnAI) + "].");
+        drawTableNextStep(gameTable, cellAI, columnAI, symbolAi);
+
+        if (step >= 5) {
+            if (checkWin(gameTable)) {
+                System.out.println("AI won!");
+                return 5;
+            }
+        }
+        return 0;
     }
 
     // Make Player's move
-    public static void makePlayerMove(){
+    public static int makePlayerMove(int step, char[][] gameTable){
         // We must check whether the player have entered a correct value from 1 to 3
+        char symbolPlayer;
+        int cellPlayer;
+        int columnPlayer;
 
-        while(true){
+        if (step % 2 != 0) {
+           symbolPlayer = 'X';
+        } else {
+            symbolPlayer = 'O';
+        }
+
+//        while(true){
             System.out.print("Please, enter coordinates cell (1-3): ");
-            int cellPlayer = getInputValue().nextInt();
+            cellPlayer = getInputValue().nextInt();
             System.out.print("Please, enter coordinates column (1-3): ");
-            int columnPlayer = getInputValue().nextInt();
+            columnPlayer = getInputValue().nextInt();
 
-            if (cellPlayer >= 1 && cellPlayer <= 3 && columnPlayer >=1 && columnPlayer <= 3){
+//            if (cellPlayer >= 1 && cellPlayer <= 3 && columnPlayer >=1 && columnPlayer <= 3){
+//                System.out.println("The player have decided to put a value: [" +
+//                        cellPlayer + "][" + columnPlayer + "].");
+//                break;
+//            }
+            if (gameTable[cellPlayer - 1][columnPlayer - 1] == 'X' ||
+                    gameTable[cellPlayer -1][columnPlayer -1] == 'O' ) {
+                System.out.print("Coordinates with this value are already taken. Please enter the coordinates again.\n");
+                makePlayerMove(step, gameTable);
+            } else if (cellPlayer >= 1 && cellPlayer <= 3 && columnPlayer >=1 && columnPlayer <= 3) {
                 System.out.println("The player have decided to put a value: [" +
                         cellPlayer + "][" + columnPlayer + "].");
-                break;
+                drawTableNextStep(gameTable, cellPlayer, columnPlayer, symbolPlayer);
+                if (step >= 5) {
+                    if (checkWin(gameTable)) {
+                        System.out.println("Player won!");
+                        return 5;
+                    }
+                }
+//                break;
+            } else {
+                System.out.println("\u001B[31m\t");
+                System.out.println("YOU HAVE ENTERED A WRONG VALUE. PLEASE, CHECK ACCESSIBLE COORDINATES AND RE-ENTER.");
+                System.out.println("\u001B[0m");
             }
-            System.out.println("\u001B[31m\t");
-            System.out.println("YOU HAVE ENTERED A WRONG VALUE. PLEASE, CHECK ACCESSIBLE COORDINATES AND RE-ENTER.");
-            System.out.println("\u001B[0m");
-        }
+//        }
+//        drawTableNextStep(gameTable, cellPlayer, columnPlayer, symbolPlayer);
+        return 0;
     }
 
     // Check game status
