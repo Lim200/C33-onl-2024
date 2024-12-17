@@ -42,12 +42,20 @@ public class TicTacToeGame {
                 while (step <= 9) {
                     step += 1;
                     int winPlayer = makePlayerMove(step, gameTable);
-                    if (step == 9 || winPlayer == 5) {
+                    if (winPlayer == 5) {
+                        break;
+                    }
+                    if (step == 9) {
+                        System.out.println("Dead heat, try again!");
                         break;
                     }
                     step +=1;
                     int winAi = makeAIMove(step, gameTable);
-                    if (step == 9 || winAi == 5) {
+                    if (winAi == 5) {
+                        break;
+                    }
+                    if (step == 9) {
+                        System.out.println("Dead heat, try again!");
                         break;
                     }
                 }
@@ -56,12 +64,20 @@ public class TicTacToeGame {
                 while (step <= 9) {
                     step += 1;
                     int winAi = makeAIMove(step, gameTable);
-                    if (step == 9 || winAi == 5) {
+                    if (winAi == 5) {
+                        break;
+                    }
+                    if (step == 9) {
+                        System.out.println("Dead heat, try again!");
                         break;
                     }
                     step += 1;
                     int winPlayer = makePlayerMove(step, gameTable);
-                    if (step == 9 || winPlayer == 5) {
+                    if (winPlayer == 5) {
+                        break;
+                    }
+                    if (step == 9) {
+                        System.out.println("Dead heat, try again!");
                         break;
                     }
                 }
@@ -148,7 +164,7 @@ public class TicTacToeGame {
             int row3 = index3 / 3;
             int col3 = index3 % 3;
 
-            if (gameTable[row1][col1] != '\u0000' &&
+            if (gameTable[row1][col1] != '*' &&
                     gameTable[row1][col1] == gameTable[row2][col2] &&
                     gameTable[row1][col1] == gameTable[row3][col3]) {
                 return true;
@@ -200,42 +216,42 @@ public class TicTacToeGame {
         int columnPlayer;
 
         if (step % 2 != 0) {
-           symbolPlayer = 'X';
+            symbolPlayer = 'X';
         } else {
             symbolPlayer = 'O';
         }
 
 //        while(true){
-            System.out.print("Please, enter coordinates cell (1-3): ");
-            cellPlayer = getInputValue().nextInt();
-            System.out.print("Please, enter coordinates column (1-3): ");
-            columnPlayer = getInputValue().nextInt();
+        System.out.print("Please, enter coordinates cell (1-3): ");
+        cellPlayer = getInputValue().nextInt();
+        System.out.print("Please, enter coordinates column (1-3): ");
+        columnPlayer = getInputValue().nextInt();
 
 //            if (cellPlayer >= 1 && cellPlayer <= 3 && columnPlayer >=1 && columnPlayer <= 3){
 //                System.out.println("The player have decided to put a value: [" +
 //                        cellPlayer + "][" + columnPlayer + "].");
 //                break;
 //            }
-            if (gameTable[cellPlayer - 1][columnPlayer - 1] == 'X' ||
-                    gameTable[cellPlayer -1][columnPlayer -1] == 'O' ) {
-                System.out.print("Coordinates with this value are already taken. Please enter the coordinates again.\n");
-                makePlayerMove(step, gameTable);
-            } else if (cellPlayer >= 1 && cellPlayer <= 3 && columnPlayer >=1 && columnPlayer <= 3) {
-                System.out.println("The player have decided to put a value: [" +
-                        cellPlayer + "][" + columnPlayer + "].");
-                drawTableNextStep(gameTable, cellPlayer, columnPlayer, symbolPlayer);
-                if (step >= 5) {
-                    if (checkWin(gameTable)) {
-                        System.out.println("Player won!");
-                        return 5;
-                    }
+        if (gameTable[cellPlayer - 1][columnPlayer - 1] == 'X' ||
+                gameTable[cellPlayer -1][columnPlayer -1] == 'O' ) {
+            System.out.print("Coordinates with this value are already taken. Please enter the coordinates again.\n");
+            makePlayerMove(step, gameTable);
+        } else if (cellPlayer >= 1 && cellPlayer <= 3 && columnPlayer >=1 && columnPlayer <= 3) {
+            System.out.println("The player have decided to put a value: [" +
+                    cellPlayer + "][" + columnPlayer + "].");
+            drawTableNextStep(gameTable, cellPlayer, columnPlayer, symbolPlayer);
+            if (step >= 5) {
+                if (checkWin(gameTable)) {
+                    System.out.println("Player won!");
+                    return 5;
                 }
-//                break;
-            } else {
-                System.out.println("\u001B[31m\t");
-                System.out.println("YOU HAVE ENTERED A WRONG VALUE. PLEASE, CHECK ACCESSIBLE COORDINATES AND RE-ENTER.");
-                System.out.println("\u001B[0m");
             }
+//                break;
+        } else {
+            System.out.println("\u001B[31m\t");
+            System.out.println("YOU HAVE ENTERED A WRONG VALUE. PLEASE, CHECK ACCESSIBLE COORDINATES AND RE-ENTER.");
+            System.out.println("\u001B[0m");
+        }
 //        }
 //        drawTableNextStep(gameTable, cellPlayer, columnPlayer, symbolPlayer);
         return 0;
